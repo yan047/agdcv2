@@ -26,8 +26,8 @@ RUN mkdir -p "$WORK_BASE" && \
     mkdir -p "$DATACUBE_OUTPUT_DIR"
 
 # copy configuration files to image, and create links to /root 
-COPY .datacube.conf "$DATACUBE_CONFIG_DIR"
-COPY .pgpass "$DATACUBE_CONFIG_DIR"
+COPY datacube.conf "$DATACUBE_CONFIG_DIR"
+COPY pgpass "$DATACUBE_CONFIG_DIR"
 RUN ln -sf "$DATACUBE_CONFIG_DIR"/datacube.conf /root/.datacube.conf && \
     ln -sf "$DATACUBE_CONFIG_DIR"/pgpass /root/.pgpass  && \
     chmod 0600 /root/.pgpass
