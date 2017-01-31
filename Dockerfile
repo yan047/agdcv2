@@ -38,12 +38,11 @@ WORKDIR "$WORK_BASE"
 # install dependencies
 RUN conda install psycopg2 gdal libgdal hdf5 rasterio netcdf4 libnetcdf pandas -y --quiet
 
-# download and build agdc v2 
-
+# download and build agdc v2 after 1 Jan 2017 
 RUN git clone https://github.com/data-cube/agdc-v2 
 WORKDIR "$WORK_BASE"/agdc-v2
 
-RUN git checkout develop 
+RUN git checkout tags/datacube-1.1.17 
 RUN python setup.py install
 
 # the following language settings are required by datacube commands, to be compatible with OS settings.
