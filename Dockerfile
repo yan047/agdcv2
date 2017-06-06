@@ -1,4 +1,4 @@
-# Version: 2
+# Version: 1.4
 # Name: agdc2 (agdc-v2)
 # for Python 3.5
 
@@ -9,6 +9,9 @@ MAINTAINER "boyan.au@gmail.com"
 # In case someone loses the Dockerfile
 RUN rm -rf /etc/Dockerfile
 COPY Dockerfile /etc/Dockerfile
+
+# install gcc for compiling SharedArray
+RUN apt-get update && apt-get install -y gcc
 
 # set environment variables
 ENV WORK_BASE /var/agdc
@@ -37,12 +40,16 @@ WORKDIR "$WORK_BASE"
 
 # install dependencies
 RUN conda install psycopg2 gdal libgdal hdf5 rasterio netcdf4 libnetcdf pandas -y --quiet
+RUN conda config --add channels conda-forge && \
+	conda install zstandard dill -y --quiet
 
-# download and build agdc v2 after 1 Jan 2017 
-RUN git clone https://github.com/data-cube/agdc-v2 
-WORKDIR "$WORK_BASE"/agdc-v2
+# download and build agdc-v2 S3 driver branch
+# https://github.com/opendatacube/datacube-core/tree/csiro/s3-driver
+RUN git clone -b csiro/s3-driver https://github.com/opendatacube/datacube-core 
 
-RUN git checkout tags/datacube-1.1.17 
+# change to source directory
+WORKDIR "$WORK_BASE"/datacube-core
+
 RUN python setup.py install
 
 # the following language settings are required by datacube commands, to be compatible with OS settings.
