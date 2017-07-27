@@ -1,4 +1,4 @@
-# Version: 1.4
+# Version: 1.5
 # Name: agdc2 (agdc-v2)
 # for Python 3.5
 
@@ -43,9 +43,9 @@ RUN conda install psycopg2 gdal libgdal hdf5 rasterio netcdf4 libnetcdf pandas -
 RUN conda config --add channels conda-forge && \
 	conda install zstandard dill -y --quiet
 
-# download and build agdc-v2 S3 driver branch
-# https://github.com/opendatacube/datacube-core/tree/csiro/s3-driver
-RUN git clone -b csiro/s3-driver https://github.com/opendatacube/datacube-core 
+# download and build agdc-v2 develop branch
+# https://github.com/opendatacube/datacube-core/
+RUN git clone https://github.com/opendatacube/datacube-core 
 
 # change to source directory
 WORKDIR "$WORK_BASE"/datacube-core
