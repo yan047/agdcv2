@@ -39,6 +39,7 @@ RUN ln -sf "$DATACUBE_CONFIG_DIR"/datacube.conf /root/.datacube.conf && \
 WORKDIR "$WORK_BASE"
 
 # install dependencies
+RUN conda install boto3=1.4.3 -y --quiet 
 RUN conda install psycopg2 gdal libgdal hdf5 rasterio netcdf4 libnetcdf pandas -y --quiet
 RUN conda config --add channels conda-forge && \
 	conda install zstandard dill -y --quiet
