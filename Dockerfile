@@ -1,8 +1,8 @@
-# Version: 1.5
+# Version: 1.7
 # Name: agdc2 (agdc-v2)
-# for Python 3.5
+# for Python 3.6
 
-FROM yan047/anaconda3
+FROM yan047/python3.6:1.0
 
 MAINTAINER "boyan.au@gmail.com"
 
@@ -18,6 +18,7 @@ ENV WORK_BASE /var/agdc
 ENV DATACUBE_CONFIG_DIR "$WORK_BASE"/config
 ENV DATACUBE_DATA_DIR "$WORK_BASE"/data
 ENV DATACUBE_OUTPUT_DIR "$WORK_BASE"/output
+ENV PYTHON_VERSION 3.6
 
 # must run with user root
 USER root
@@ -31,6 +32,7 @@ RUN mkdir -p "$WORK_BASE" && \
 # copy configuration files to image, and create links to /root 
 COPY datacube.conf "$DATACUBE_CONFIG_DIR"
 COPY pgpass "$DATACUBE_CONFIG_DIR"
+COPY environment.yaml "$WORK_BASE"
 RUN ln -sf "$DATACUBE_CONFIG_DIR"/datacube.conf /root/.datacube.conf && \
     ln -sf "$DATACUBE_CONFIG_DIR"/pgpass /root/.pgpass  && \
     chmod 0600 /root/.pgpass
@@ -39,10 +41,7 @@ RUN ln -sf "$DATACUBE_CONFIG_DIR"/datacube.conf /root/.datacube.conf && \
 WORKDIR "$WORK_BASE"
 
 # install dependencies
-RUN conda install boto3=1.4.3 -y --quiet 
-RUN conda install psycopg2 gdal libgdal hdf5 rasterio netcdf4 libnetcdf pandas -y --quiet
-RUN conda config --add channels conda-forge && \
-	conda install zstandard dill -y --quiet
+RUN conda env update -n root --file "$WORK_BASE"/environment.yaml python="$PYTHON_VERSION"
 
 # download and build agdc-v2 develop branch
 # https://github.com/opendatacube/datacube-core/
